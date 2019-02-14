@@ -28,7 +28,8 @@ print $fh qq{
 };
 
 foreach ( @domains ) {
-	print $fh qq{\tHeader edit* Location "https://$_/" "https://$_.p.vbz.ffzg.hr/"\n};
+	# for maximum compatibility, they should NOT end with /
+	print $fh qq{\tHeader edit* Location "https://$_" "https://$_.p.vbz.ffzg.hr"\n};
 }
 
 print $fh qq{
