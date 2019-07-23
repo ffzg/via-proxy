@@ -18,6 +18,10 @@ print $fh qq{
 
 	ServerName ${domain}.p.vbz.ffzg.hr
 
+	RewriteEngine on
+	# fix broken chunging
+	#RewriteRule	/common/javascript/extjs/ext-all.js 	https://${domain}/common/javascript/extjs/ext-all.js [R,L]
+
 	SSLProxyEngine on
 	ProxyAddHeaders Off
 	ProxyPass        / https://${domain}/
