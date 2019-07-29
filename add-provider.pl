@@ -3,7 +3,7 @@ use warnings;
 use strict;
 use autodie;
 
-my @domains = @ARGV;
+my @domains = map { s{^https://}{}; s{/+$}{}; $_ } @ARGV;
 
 open(my $fh, '>', "providers/$domains[0].conf");
 
