@@ -1,0 +1,54 @@
+Some providers like to have multiple prefix before it's domain. This is
+problem for Let's Encrypt certificates because we can have just 100 names
+in each certificate, so alternative solution is needed.
+
+This is guide how to configure Let's Encrypt wildcard certificate and
+rewrite every host under it.
+
+
+Install DNS plugin for certbot
+
+# part of stretch backports or buster
+
+dpavlin@mjesec:/srv/via-proxy$ sudo apt install python3-certbot-dns-rfc2136
+
+
+mjesec:/etc/bind# dnssec-keygen -a HMAC-SHA512 -b 512 -n HOST p2.vbz.ffzg.hr
+Kp2.vbz.ffzg.hr.+165+16105
+
+mjesec:/etc/bind# tail -5 named.conf.options 
+
+key "p2.vbz.ffzg.hr" {
+        algorithm hmac-sha512;
+        secret "Wtr3f3kvFRNdGmVVd0JdPlvelbD/ccxin+AqzvEp/mtKJg7SoXjN6Y8n yVkJWpswoyntgJd7YXcsXKZgzKVbpw==";
+}
+
+
+Allow creation of txt records:
+
+diff --git a/bind/named.conf.local b/bind/named.conf.local
+index acc4997..fbc101b 100644
+--- a/bind/named.conf.local
++++ b/bind/named.conf.local
+@@ -41,6 +41,9 @@ zone "knjiznica.ffzg.hr" {
+ zone "vbz.ffzg.hr" {
+        type master;
+        file "/etc/bind/vbz.ffzg.hr.db";
++       update-policy {
++               grant p2.vbz.ffzg.hr zonesub txt;
++       };
+ };
+
+
+Request certificate with dns auth:
+
+mjesec:/etc/letsencrypt# cat credentials.ini 
+dns_rfc2136_server = 127.0.0.1
+dns_rfc2136_name = p2.vbz.ffzg.hr
+dns_rfc2136_secret = Wtr3f3kvFRNdGmVVd0JdPlvelbD/ccxin+AqzvEp/mtKJg7SoXjN6Y8nyVkJWpswoyntgJd7YXcsXKZgzKVbpw==
+dns_rfc2136_algorithm = HMAC-SHA512
+
+
+dpavlin@mjesec:/srv/via-proxy$ sudo certbot certonly --dns-rfc2136 --dns-rfc2136-credentials /etc/letsencrypt/credentials --server https://acme-v02.api.letsencrypt.org/directory --dns-rfc2136-propagation-seconds 5 -d 'p2.vbz.ffzg.hr' -d '*.p2.vbz.ffzg.hr' -d '*.bmj.com.p2.vbz.ffzg.hr'
+
+
