@@ -31,9 +31,9 @@ print $fh qq{
 	#Header edit* Set-Cookie "(.*)(?i:; *secure)" "\$1"
 };
 
+print $fh qq{# if there are problems, remove traling /\n};
 foreach ( @domains ) {
-	# for maximum compatibility, they should NOT end with /
-	print $fh qq{\tHeader edit* Location "https://$_" "https://$_.p.vbz.ffzg.hr"\n};
+	print $fh qq{\tHeader edit* Location "https://$_/" "https://$_.p.vbz.ffzg.hr/"\n};
 }
 
 print $fh qq{
