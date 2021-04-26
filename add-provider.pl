@@ -47,9 +47,9 @@ foreach ( @domains ) {
 print $fh qq{
 	FilterDeclare NEWPATHS
 	FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^text/html|"
-	FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^text/css|"
-	FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^text/javascript|"
-	FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^application/javascript|"
+	#FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^text/css|"
+	#FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^text/javascript|"
+	#FilterProvider NEWPATHS SUBSTITUTE "%{Content_Type} =~ m|^application/javascript|"
 	FilterChain NEWPATHS
 
 	CustomLog /var/log/apache2/access-p.vbz.ffzg.hr.log vhost_combined
